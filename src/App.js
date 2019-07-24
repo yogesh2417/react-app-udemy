@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
-import './App.css';
+import './App.css'
+import './Person/Person.css';
 import Person from './Person/Person';
 
 class App extends Component {
@@ -7,7 +8,8 @@ class App extends Component {
     persons:[
       {name:"Jai",age:"35"},
       {name:"Vir",age:"40"}
-    ]
+    ],
+    showPerson:false
   }
 
   SwitchNames=(newName,newAge)=>{
@@ -28,15 +30,60 @@ class App extends Component {
     })
   }
 
+  togglePerons =()=>{
+    this.setState({showPerson:!this.state.showPerson})
+  }
+
+  deletePerson =(index)=>{
+    this.setState({persons: this.state.persons.splice(index,1)})
+  }
+
+
 //two ways to pass parameters using bind() or ()
   render(){
+    const style={
+      backgroundColor:'white',
+      font:'inherit',
+      border:'1px solid blue',
+      padding:'8px',
+      cursor:'pointer'
+    }
+
+    //this is the alternative way to achieve conditional rendering
+    let persons = null;
+    if(this.state.showPerson){
+      persons=(
+        <div>
+          {this.state.persons.map((person,index) =>{
+            return <Person clickProp={()=>this.deletePerson(index)} name={person.name} age={person.age}/>
+          })}
+{/* 
+      <Person name={this.state.persons[0].name} age={this.state.persons[0].age}/>
+      <Person clickProp={this.SwitchNames.bind(this,'Sam','50')} changeHandler={this.onChangeHandler} 
+      name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Running</Person>
+      <Person name="Mary" age="30"/> */}
+      </div>
+      )
+    }
+
+
+
   return (
     <div className="App">
       <h1>Hi React app</h1>
-      <button onClick={()=>this.SwitchNames('Max','45')}>Switch Names</button>
+      <button style={style} onClick={()=>this.SwitchNames('Max','45')}>Switch Names</button>
+      <button style={style} onClick={this.togglePerons}>Toggle Persons</button>
+      {/* {
+        this.state.showPerson ?
+      <div>
       <Person name={this.state.persons[0].name} age={this.state.persons[0].age}/>
-      <Person clickProp={this.SwitchNames.bind(this,'Sam','50')} changeHandler={this.onChangeHandler} name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Running</Person>
+      <Person clickProp={this.SwitchNames.bind(this,'Sam','50')} changeHandler={this.onChangeHandler} 
+      name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Running</Person>
       <Person name="Mary" age="30"/>
+      </div> : null
+    } */}
+    {persons}
+ 
     </div>
   );
   }
