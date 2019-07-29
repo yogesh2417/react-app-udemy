@@ -1,13 +1,14 @@
 import React,{Component} from 'react';
 import './App.css'
 import './Person/Person.css';
+//import Radium, {StyleRoot} from 'radium';
 import Person from './Person/Person';
 
 class App extends Component {
   state={
     persons:[
-      {name:"Jai",age:"35"},
-      {name:"Vir",age:"40"}
+      {id:"1",name:"Jai",age:"35"},
+      {id:"2",name:"Vir",age:"40"}
     ],
     showPerson:false
   }
@@ -21,13 +22,20 @@ class App extends Component {
     })
   }
 
-  onChangeHandler=(event)=>{
-    this.setState({
-      persons:[
-        {name:"Jai",age:"35"},
-        {name:event.target.value,age:"40"}
-      ]
-    })
+  onChangeHandler=(event,id)=>{
+    const personIndex= this.state.persons.findIndex(p=>{
+      return p.id===id;
+    });
+
+    const person={ ...this.state.persons[personIndex]};
+
+    person.name=event.target.value;
+
+    const persons=[...this.state.persons];
+
+    persons[personIndex]=person;
+    
+    this.setState({persons:persons});
   }
 
   togglePerons =()=>{
@@ -35,19 +43,37 @@ class App extends Component {
   }
 
   deletePerson =(index)=>{
-    this.setState({persons: this.state.persons.splice(index,1)})
+    //this.setState({persons: this.state.persons.splice(index,1)});
+    //const persons=this.state.persons.splice();
+    const persons= [...this.state.persons];
+    persons.splice(index,1);
+    this.setState({persons:persons});
   }
 
 
 //two ways to pass parameters using bind() or ()
   render(){
     const style={
-      backgroundColor:'white',
+      backgroundColor:'green',
+      color:'white',
       font:'inherit',
       border:'1px solid blue',
       padding:'8px',
       cursor:'pointer'
+      // ':hover':{
+      //   backgroundColor:'lightgreen',
+      //   color:'black'
+      // }
     }
+
+    const classes=[];
+    if(this.state.persons.length<=1){
+      classes.push("red");
+    }
+    if(this.state.persons.length<=0){
+      classes.push("bold");
+    }
+
 
     //this is the alternative way to achieve conditional rendering
     let persons = null;
@@ -55,7 +81,8 @@ class App extends Component {
       persons=(
         <div>
           {this.state.persons.map((person,index) =>{
-            return <Person clickProp={()=>this.deletePerson(index)} name={person.name} age={person.age}/>
+            return <Person clickProp={()=>this.deletePerson(index)} key={person.id} name={person.name} age={person.age}
+            changeHandler={(event)=>this.onChangeHandler(event,person.id)}/>
           })}
 {/* 
       <Person name={this.state.persons[0].name} age={this.state.persons[0].age}/>
@@ -64,14 +91,22 @@ class App extends Component {
       <Person name="Mary" age="30"/> */}
       </div>
       )
+
+      style.backgroundColor='red';
+      // style[':hover']={
+      //   backgroundColor:'salmon',
+      //   color:'black'
+      // };
     }
 
 
 
   return (
+    // <StyleRoot>
     <div className="App">
       <h1>Hi React app</h1>
-      <button style={style} onClick={()=>this.SwitchNames('Max','45')}>Switch Names</button>
+      <p className={classes.join(" ")}>Binding Css classes dynamically</p>
+      {/* <button style={style} onClick={()=>this.SwitchNames('Max','45')}>Switch Names</button> */}
       <button style={style} onClick={this.togglePerons}>Toggle Persons</button>
       {/* {
         this.state.showPerson ?
@@ -85,11 +120,13 @@ class App extends Component {
     {persons}
  
     </div>
+    //</StyleRoot>
   );
   }
 
 }
 
+//export default Radium(App);
 export default App;
 
 
