@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import './App.css'
+import CssClasses from './App.css'
 import './Person/Person.css';
 //import Radium, {StyleRoot} from 'radium';
 import Person from './Person/Person';
@@ -53,25 +53,27 @@ class App extends Component {
 
 //two ways to pass parameters using bind() or ()
   render(){
-    const style={
-      backgroundColor:'green',
-      color:'white',
-      font:'inherit',
-      border:'1px solid blue',
-      padding:'8px',
-      cursor:'pointer'
-      // ':hover':{
-      //   backgroundColor:'lightgreen',
-      //   color:'black'
-      // }
-    }
+    // const style={
+    //   backgroundColor:'green',
+    //   color:'white',
+    //   font:'inherit',
+    //   border:'1px solid blue',
+    //   padding:'8px',
+    //   cursor:'pointer'
+    //   // ':hover':{
+    //   //   backgroundColor:'lightgreen',
+    //   //   color:'black'
+    //   // }
+    // }
+
+    let CssStyle ='';
 
     const classes=[];
     if(this.state.persons.length<=1){
-      classes.push("red");
+      classes.push(CssClasses.red);
     }
     if(this.state.persons.length<=0){
-      classes.push("bold");
+      classes.push(CssClasses.bold);
     }
 
 
@@ -92,22 +94,24 @@ class App extends Component {
       </div>
       )
 
-      style.backgroundColor='red';
+      //style.backgroundColor='red';
       // style[':hover']={
       //   backgroundColor:'salmon',
       //   color:'black'
       // };
+
+      CssStyle = CssClasses.Red;
     }
 
 
 
   return (
     // <StyleRoot>
-    <div className="App">
+    <div className={CssClasses.App}>
       <h1>Hi React app</h1>
       <p className={classes.join(" ")}>Binding Css classes dynamically</p>
       {/* <button style={style} onClick={()=>this.SwitchNames('Max','45')}>Switch Names</button> */}
-      <button style={style} onClick={this.togglePerons}>Toggle Persons</button>
+      <button className={CssStyle} onClick={this.togglePerons}>Toggle Persons</button>
       {/* {
         this.state.showPerson ?
       <div>
