@@ -1,8 +1,9 @@
 import React,{Component} from 'react';
 import CssClasses from './App.css'
-import './Person/Person.css';
+import '../components/Persons/Person/Person.css';
 //import Radium, {StyleRoot} from 'radium';
-import Person from './Person/Person';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
   state={
@@ -53,54 +54,17 @@ class App extends Component {
 
 //two ways to pass parameters using bind() or ()
   render(){
-    // const style={
-    //   backgroundColor:'green',
-    //   color:'white',
-    //   font:'inherit',
-    //   border:'1px solid blue',
-    //   padding:'8px',
-    //   cursor:'pointer'
-    //   // ':hover':{
-    //   //   backgroundColor:'lightgreen',
-    //   //   color:'black'
-    //   // }
-    // }
-
-    let CssStyle ='';
-
-    const classes=[];
-    if(this.state.persons.length<=1){
-      classes.push(CssClasses.red);
-    }
-    if(this.state.persons.length<=0){
-      classes.push(CssClasses.bold);
-    }
-
 
     //this is the alternative way to achieve conditional rendering
     let persons = null;
     if(this.state.showPerson){
       persons=(
-        <div>
-          {this.state.persons.map((person,index) =>{
-            return <Person clickProp={()=>this.deletePerson(index)} key={person.id} name={person.name} age={person.age}
-            changeHandler={(event)=>this.onChangeHandler(event,person.id)}/>
-          })}
-{/* 
-      <Person name={this.state.persons[0].name} age={this.state.persons[0].age}/>
-      <Person clickProp={this.SwitchNames.bind(this,'Sam','50')} changeHandler={this.onChangeHandler} 
-      name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Running</Person>
-      <Person name="Mary" age="30"/> */}
-      </div>
+       
+          <Persons
+          persons={this.state.persons}
+          clicked={this.deletePerson}
+          changed={this.onChangeHandler} />
       )
-
-      //style.backgroundColor='red';
-      // style[':hover']={
-      //   backgroundColor:'salmon',
-      //   color:'black'
-      // };
-
-      CssStyle = CssClasses.Red;
     }
 
 
@@ -108,19 +72,12 @@ class App extends Component {
   return (
     // <StyleRoot>
     <div className={CssClasses.App}>
-      <h1>Hi React app</h1>
-      <p className={classes.join(" ")}>Binding Css classes dynamically</p>
-      {/* <button style={style} onClick={()=>this.SwitchNames('Max','45')}>Switch Names</button> */}
-      <button className={CssStyle} onClick={this.togglePerons}>Toggle Persons</button>
-      {/* {
-        this.state.showPerson ?
-      <div>
-      <Person name={this.state.persons[0].name} age={this.state.persons[0].age}/>
-      <Person clickProp={this.SwitchNames.bind(this,'Sam','50')} changeHandler={this.onChangeHandler} 
-      name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Running</Person>
-      <Person name="Mary" age="30"/>
-      </div> : null
-    } */}
+      <Cockpit
+      title={this.props.appTitle}
+      showPerson={this.state.showPerson}
+      persons={this.state.persons}
+      clicked={this.togglePerons}/>
+
     {persons}
  
     </div>

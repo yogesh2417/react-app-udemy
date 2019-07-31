@@ -13,9 +13,9 @@ const person =(props)=>{
     return (
         <div className={CssClasses.Person} >
             {/* <div className="Person" style={style}> */}
-            <p onClick={props.clickProp}>My name is {props.name}. I am {props.age} years old. </p>
+            <p onClick={props.click}>My name is {props.name}. I am {props.age} years old. </p>
             <p>{props.children}</p>
-            <input type="Text" onChange={props.changeHandler} value={props.name}/>
+            <input type="Text" onChange={props.changed} value={props.name}/>
         </div>
     )
 }
