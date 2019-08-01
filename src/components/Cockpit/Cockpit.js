@@ -1,7 +1,19 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import CssClasses from './Cockpit.css';
 
-const cockpit = (props) =>{
+const Cockpit = (props) =>{
+
+    useEffect(()=>{
+        console.log("it runs in every render cycle.use [] to run this for the first time else it will depend on value passed in []");
+        setTimeout(() => {
+            alert('Save Data');
+        }, 1000);
+        return (()=>{
+            alert('return statement from useEffect.');
+            console.log('it will call before the useEffect other functionality works.');
+        })
+    },[props.persons]);
+
     const classes=[];
     let CssStyle ='';
 
@@ -25,4 +37,4 @@ const cockpit = (props) =>{
     )
 }
 
-export default cockpit;
+export default React.memo(Cockpit);
