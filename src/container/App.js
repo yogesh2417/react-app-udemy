@@ -4,14 +4,19 @@ import '../components/Persons/Person/Person.css';
 //import Radium, {StyleRoot} from 'radium';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import withClasses from '../hoc/withClasses';
+import Auxiliary from '../hoc/Auxiliary';
+import AuthContext from '../context/auth-context';
 
 class App extends Component {
   state={
     persons:[
-      {id:"1",name:"Jai",age:"35"},
-      {id:"2",name:"Vir",age:"40"}
+      {id:"1",name:"Jai",age:35},
+      {id:"2",name:"Vir",age:40}
     ],
-    showPerson:false
+    showPerson:false,
+    stateCount:0,
+    authenticated:false
   }
 
   SwitchNames=(newName,newAge)=>{
@@ -36,7 +41,12 @@ class App extends Component {
 
     persons[personIndex]=person;
     
-    this.setState({persons:persons});
+    this.setState((prevState,props)=>{
+      return{
+        persons:persons,
+        stateCount:prevState.stateCount+1
+      };
+    });
   }
 
   togglePerons =()=>{
@@ -49,6 +59,10 @@ class App extends Component {
     const persons= [...this.state.persons];
     persons.splice(index,1);
     this.setState({persons:persons});
+  }
+
+  loginHandler=()=>{
+    this.setState({authenticated:true});
   }
 
 
@@ -71,6 +85,12 @@ class App extends Component {
 
   return (
     // <StyleRoot>
+    <Auxiliary>
+      <AuthContext.Provider 
+      value={{
+        authenticated:this.state.authenticated,
+        login:this.loginHandler
+        }}>
     <div className={CssClasses.App}>
       <Cockpit
       title={this.props.appTitle}
@@ -79,8 +99,10 @@ class App extends Component {
       clicked={this.togglePerons}/>
 
     {persons}
- 
+    
     </div>
+    </AuthContext.Provider>
+    </Auxiliary>
     //</StyleRoot>
   );
   }
@@ -88,7 +110,7 @@ class App extends Component {
 }
 
 //export default Radium(App);
-export default App;
+export default withClasses(App,CssClasses.App) ;
 
 
 

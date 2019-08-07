@@ -1,18 +1,26 @@
-import React, {useEffect} from 'react';
+import React, {useEffect,useRef,useContext} from 'react';
 import CssClasses from './Cockpit.css';
+import AuthContext from '../../context/auth-context';
 
 const Cockpit = (props) =>{
 
+  const toggleBtnRef = useRef(null);
+
+  const authcontext=useContext(AuthContext);
+
     useEffect(()=>{
         console.log("it runs in every render cycle.use [] to run this for the first time else it will depend on value passed in []");
-        setTimeout(() => {
-            alert('Save Data');
-        }, 1000);
+        // setTimeout(() => {
+        //     alert('Save Data');
+        // }, 1000);
+
+        toggleBtnRef.current.click();
+
         return (()=>{
             alert('return statement from useEffect.');
             console.log('it will call before the useEffect other functionality works.');
         })
-    },[props.persons]);
+    },[]); //},[props.persons]);
 
     const classes=[];
     let CssStyle ='';
@@ -32,7 +40,13 @@ const Cockpit = (props) =>{
         <div className={CssClasses.Cockpit}>
         <h1>{props.title}</h1>
       <p className={classes.join(" ")}>Binding Css classes dynamically</p>     
-      <button className={CssStyle} onClick={props.clicked}>Toggle Persons</button>
+      <button ref={toggleBtnRef} className={CssStyle} onClick={props.clicked}>Toggle Persons</button>
+      {/* <AuthContext.Consumer>
+        {
+          context=><button onClick={context.login}>Log In</button>
+        }
+        </AuthContext.Consumer> */}
+        <button onClick={authcontext.login}>Log In</button>
       </div>
     )
 }
