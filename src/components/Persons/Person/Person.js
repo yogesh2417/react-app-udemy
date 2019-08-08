@@ -23,7 +23,7 @@ class Person extends Component{
     componentDidMount(){
         //this.inputElement.focus();
         this.inpElementRef.current.focus();
-        console.log(contextType.authenticated);
+        console.log(this.context.authenticated);
     }
     
     render(){
