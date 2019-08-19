@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import Auxiliary from '../../hoc/Auxiliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 
 const INGREDIENT_PRICES = {
     salad:0.5,
@@ -19,7 +21,20 @@ class BurgerBuilder extends Component {
             cheese:0,
             meat:0
         },
-        totalPrice:4
+        totalPrice:4,
+        purchasable:false,
+        showModal:false
+    }
+
+    updatePurchaseState(ingredients){
+        const sum = Object.keys(ingredients)
+        .map(igkeys =>{
+            return ingredients[igkeys];
+        }).reduce((sum,el)=>{
+            return sum + el;
+        },0)
+
+        this.setState({purchasable:sum>0});
     }
 
     addIngredientHandler = (type) =>{
@@ -33,6 +48,7 @@ class BurgerBuilder extends Component {
         const oldPrice = this.state.totalPrice;
         const newPrice = oldPrice + priceAddition;
         this.setState({totalPrice:newPrice,ingredients:updatedIngredient});
+        this.updatePurchaseState(updatedIngredient);
     }
 
     removeIngredientHandler = (type) => {
@@ -49,17 +65,47 @@ class BurgerBuilder extends Component {
         const oldPrice = this.state.totalPrice;
         const newPrice = oldPrice - priceDeduction;
         this.setState({totalPrice:newPrice,ingredients:updatedIngredient});
+        this.updatePurchaseState(updatedIngredient);
+    }
+
+    showModal =() =>{
+        this.setState({showModal:true});       
+    }
+
+    removeBackdropHandler=()=>{
+        this.setState({showModal:false});
+    }
+
+    cancelSummaryHandler=()=>{
+        this.setState({showModal:false});
+    }
+
+    continueSummaryHandler=()=>{
+        alert("You continued!");
     }
 
 
     render(){
-        
+        const disableInfo ={
+            ...this.state.ingredients
+        }
+        for (let key in disableInfo){
+            disableInfo[key]= disableInfo[key] <=0;
+        }
+
         return(
             <Auxiliary>
             <div>Burger</div>
-            <p>Total Price : {this.state.totalPrice}</p>
+            <Modal show={this.state.showModal} backdropShow={this.removeBackdropHandler}>
+                <OrderSummary price={this.state.totalPrice} ingredients={this.state.ingredients} cancelClicked={this.cancelSummaryHandler} continueClicked={this.continueSummaryHandler}/>
+            </Modal>
             <Burger ingredients={this.state.ingredients}/>
-            <BuildControls addIngredient={this.addIngredientHandler} removeIngredient={this.removeIngredientHandler}/>
+            <BuildControls addIngredient={this.addIngredientHandler} 
+            removeIngredient={this.removeIngredientHandler}
+            disable={disableInfo}
+            price={this.state.totalPrice}
+            purchaseState={this.state.purchasable}
+            showModal={this.showModal}/>
             </Auxiliary>
         )
     }
