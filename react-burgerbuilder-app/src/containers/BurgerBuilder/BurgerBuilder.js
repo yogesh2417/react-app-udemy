@@ -95,7 +95,6 @@ class BurgerBuilder extends Component {
 
         return(
             <Auxiliary>
-            <div>Burger</div>
             <Modal show={this.state.showModal} backdropShow={this.removeBackdropHandler}>
                 <OrderSummary price={this.state.totalPrice} ingredients={this.state.ingredients} cancelClicked={this.cancelSummaryHandler} continueClicked={this.continueSummaryHandler}/>
             </Modal>
